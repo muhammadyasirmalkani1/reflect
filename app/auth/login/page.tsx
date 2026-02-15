@@ -1,18 +1,20 @@
-import type { Metadata } from "next"
-import LoginForm from "@/components/auth/login-form"
-import Link from "next/link"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Login | Reflect",
-  description: "Sign in to your Reflect account",
-}
+import { useState } from "react"
+import EnhancedLoginForm from "@/components/auth/enhanced-login-form"
+import { PasswordResetFlow } from "@/components/auth/password-reset-flow"
+import { GoogleOAuthButton } from "@/components/auth/google-oauth-button"
+import Link from "next/link"
+import { Separator } from "@/components/ui/separator"
 
 export default function LoginPage() {
+  const [showPasswordReset, setShowPasswordReset] = useState(false)
+
   return (
     <div className="cosmic-bg min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center mb-6">
+          <Link href="/" className="inline-flex items-center mb-6 justify-center w-full">
             <div className="relative w-10 h-10 mr-3">
               <div className="absolute inset-0 bg-purple-500 rounded-full blur-sm opacity-70"></div>
               <div className="absolute inset-1 bg-black rounded-full"></div>
@@ -25,19 +27,38 @@ export default function LoginPage() {
             </span>
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-          <p className="text-gray-400">Sign in to your account to continue</p>
+          <p className="text-gray-400">Sign in to your account</p>
         </div>
 
-        <LoginForm />
+        {showPasswordReset ? (
+          <PasswordResetFlow onBack={() => setShowPasswordReset(false)} />
+        ) : (
+          <div className="space-y-4">
+            <GoogleOAuthButton />
 
-        <div className="text-center mt-6">
-          <p className="text-gray-400">
-            Don't have an account?{" "}
-            <Link href="/auth/register" className="text-purple-400 hover:text-purple-300 font-medium">
-              Sign up
-            </Link>
-          </p>
-        </div>
+            <Separator className="bg-gray-700" />
+
+            <EnhancedLoginForm />
+
+            <button
+              onClick={() => setShowPasswordReset(true)}
+              className="w-full text-sm text-purple-400 hover:text-purple-300 text-center"
+            >
+              Forgot password?
+            </button>
+
+            <Separator className="bg-gray-700" />
+
+            <div className="text-center">
+              <p className="text-gray-400">
+                Don't have an account?{" "}
+                <Link href="/auth/register" className="text-purple-400 hover:text-purple-300 font-medium">
+                  Sign up
+                </Link>
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,3 @@
-"Client";
-
-import React from "react";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
@@ -79,7 +76,7 @@ export default function DocsPage() {
                 href="/docs/features/ai-assistant"
                 className="text-purple-400 hover:text-purple-300 flex items-center"
               >
-                AI ChatGPT <ArrowRight className="ml-1 h-3 w-3" />
+                AI Assistant <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </li>
             <li>
@@ -110,11 +107,6 @@ export default function DocsPage() {
             <li>
               <Link href="/docs/advanced/templates" className="text-purple-400 hover:text-purple-300 flex items-center">
                 Templates <ArrowRight className="ml-1 h-3 w-3" />
-              </Link>
-            </li>
-            <li>
-              <Link href="/docs/advanced/api" className="text-purple-400 hover:text-purple-300 flex items-center">
-                API <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </li>
           </ul>

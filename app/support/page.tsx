@@ -1,6 +1,3 @@
-"Client";
-
-import React from "react";
 import type { Metadata } from "next"
 import CustomerSupportChat from "@/components/support/customer-support-chat"
 

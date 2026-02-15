@@ -1,5 +1,3 @@
-"Client"
-
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -11,7 +9,7 @@ export default function AIAssistantPage() {
     title: "How to Use Reflect's AI Assistant for Better Thinking",
     excerpt:
       "A comprehensive guide to leveraging Reflect's AI assistant to generate ideas, make connections, and enhance your thinking process.",
-    coverImage: "/img/3.svg?height=600&width=1200",
+    coverImage: "/placeholder.svg?height=600&width=1200",
     category: "AI",
     publishDate: "April 28, 2025",
     readTime: 10,

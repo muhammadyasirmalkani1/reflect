@@ -1,4 +1,3 @@
-"Client"
 import type { Metadata } from "next"
 import RegisterForm from "@/components/auth/register-form"
 import Link from "next/link"

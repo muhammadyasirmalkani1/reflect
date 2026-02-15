@@ -1,6 +1,3 @@
-"Client";
-
-import React from "react";
 import NewsletterSubscription from "@/components/newsletter-subscription"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"

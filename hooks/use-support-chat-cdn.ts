@@ -114,7 +114,7 @@ export function useSupportChat() {
     })
 
     // Handle connection errors
-    socket.on("connect", (err: Error) => {
+    socket.on("connect_error", (err: Error) => {
       toast({
         title: "Connection error",
         description: err.message,
