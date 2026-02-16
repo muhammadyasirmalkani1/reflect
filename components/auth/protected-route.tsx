@@ -2,6 +2,7 @@
 
 import type React from "react"
 
+import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Loader2 } from "lucide-react"
@@ -66,7 +67,3 @@ export default function ProtectedRoute({
 
   return <>{children}</>
 }
-function useAuth(): { user: any; isLoading: any; hasPermission: any; hasRole: any } {
-  throw new Error("Function not implemented.")
-}
-

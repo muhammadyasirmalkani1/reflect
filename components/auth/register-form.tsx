@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Loader2, Check, X } from "lucide-react"
-
+import { useAuth } from "@/hooks/use-auth"
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -249,7 +249,3 @@ export default function RegisterForm() {
     </Card>
   )
 }
-function useAuth(): { register: any } {
-  throw new Error("Function not implemented.")
-}
-
