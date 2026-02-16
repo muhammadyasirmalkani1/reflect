@@ -2,24 +2,23 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 
-export interface User {
+interface User {
   id: string
   email: string
   name: string
-  role: 'user' | 'admin' | 'moderator'
-  permissions: string[]
-  plan: 'free' | 'pro' | 'enterprise'
   avatar?: string
-  createdAt: string
+  role: 'user' | 'admin' | 'moderator'
+  plan: 'free' | 'pro' | 'enterprise'
+  permissions: string[]
 }
 
-export interface AuthContextType {
+interface AuthContextType {
   user: User | null
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string, name: string) => Promise<void>
   logout: () => Promise<void>
-  updateUser: (user: Partial<User>) => Promise<void>
+  updateUser: (updates: Partial<User>) => Promise<void>
   hasPermission: (permission: string) => boolean
   hasRole: (role: string) => boolean
 }
@@ -30,34 +29,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Initialize auth state from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
+    // Check if user is logged in on mount
+    const checkAuth = async () => {
       try {
-        setUser(JSON.parse(storedUser))
-      } catch (err) {
-        console.error('Failed to parse stored user:', err)
+        const response = await fetch('/api/auth/me')
+        if (response.ok) {
+          const userData = await response.json()
+          setUser(userData)
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
-    setIsLoading(false)
+
+    checkAuth()
   }, [])
 
   const login = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      // Simulate API call
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        role: 'user',
-        permissions: ['read:notes', 'write:notes', 'read:search'],
-        plan: 'free',
-        createdAt: new Date().toISOString(),
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      if (response.ok) {
+        const userData = await response.json()
+        setUser(userData)
+      } else {
+        throw new Error('Login failed')
       }
-      setUser(mockUser)
-      localStorage.setItem('user', JSON.stringify(mockUser))
     } finally {
       setIsLoading(false)
     }
@@ -66,42 +70,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (email: string, password: string, name: string) => {
     setIsLoading(true)
     try {
-      // Simulate API call
-      const mockUser: User = {
-        id: Math.random().toString(),
-        email,
-        name,
-        role: 'user',
-        permissions: ['read:notes', 'write:notes', 'read:search'],
-        plan: 'free',
-        createdAt: new Date().toISOString(),
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      })
+      if (response.ok) {
+        const userData = await response.json()
+        setUser(userData)
+      } else {
+        throw new Error('Registration failed')
       }
-      setUser(mockUser)
-      localStorage.setItem('user', JSON.stringify(mockUser))
     } finally {
       setIsLoading(false)
     }
   }
 
   const logout = async () => {
-    setIsLoading(true)
     try {
+      await fetch('/api/auth/logout', { method: 'POST' })
       setUser(null)
-      localStorage.removeItem('user')
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      console.error('Logout failed:', error)
     }
   }
 
   const updateUser = async (updates: Partial<User>) => {
-    if (!user) return
-    const updatedUser = { ...user, ...updates }
-    setUser(updatedUser)
-    localStorage.setItem('user', JSON.stringify(updatedUser))
+    try {
+      const response = await fetch('/api/auth/user', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      if (response.ok) {
+        const updatedUser = await response.json()
+        setUser(updatedUser)
+      }
+    } catch (error) {
+      console.error('Update failed:', error)
+    }
   }
 
   const hasPermission = (permission: string): boolean => {
-    return user?.permissions.includes(permission) ?? false
+    return user?.permissions.includes(permission) || false
   }
 
   const hasRole = (role: string): boolean => {
